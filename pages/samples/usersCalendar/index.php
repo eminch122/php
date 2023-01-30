@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<link rel="stylesheet" href="fullcalendar/fullcalendar.min.css" />
+<script src="fullcalendar/lib/jquery.min.js"></script>
+<script src="fullcalendar/lib/moment.min.js"></script>
+<script src="fullcalendar/fullcalendar.min.js"></script>
+
+<script>
+
+$(document).ready(function () {
+   
+    
+    var calendar = $('#calendar').fullCalendar({
+        header: {
+      left: 'prev,next today',
+      center: 'title',
+      right: 'month,agendaWeek,agendaDay'
+    },
+    displayEventTime: false,
+    editable: false,
+    events: function(start, end, timezone, callback) {
+      $.ajax({
+        url: 'fetch-event.php',
+        dataType: 'json',
+        success: function(data) {
+          var events = [];
+          $.each(data, function(index, event) {
+            events.push({
+              id: event.id,
+              title: event.title,
+              start: event.start_event,
+              end: event.end_event,
+            });
+          });
+          callback(events);
+        }
+      });
+    },
+    eventRender: function (event, element, view) {
+     
+      if (event.allDay === 'true') {
+        event.allDay = true;
+      } else {
+        event.allDay = false;
+      }
+    },
+        
+        
+        selectable: false,
+        selectHelper: false,
+       
+      
+        
+    });
+    
+});
+
+</script>
+
+<style>
+body {
+    margin-top: 50px;
+    text-align: center;
+    font-size: 12px;
+    font-family: "Lucida Grande", Helvetica, Arial, Verdana, sans-serif;
+}
+
+#calendar {
+    width: 700px;
+    margin: 0 auto;
+}
+
+.response {
+    height: 60px;
+}
+
+.success {
+    background: #cdf3cd;
+    padding: 10px 60px;
+    border: #c3e6c3 1px solid;
+    display: inline-block;
+}
+</style>
+</head>
+<body>
+    <h2>PHP Calendar Event Management FullCalendar JavaScript Library</h2>
+
+    
+    <div id='calendar'></div>
+</body>
+
+
+</html>
